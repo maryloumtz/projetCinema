@@ -1,0 +1,30 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/php-mariadb
+{
+  "name": "PHP8.3 Node20.18 MariaDB11.4",
+  "dockerComposeFile": "docker-compose.yaml",
+  "service": "php-node",
+  "runServices": [
+    "mariadb",
+    "phpmyadmin"
+  ],
+  "workspaceFolder": "/workspaces/php_symfony",
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
+  // For use with PHP or Apache (e.g.php -S localhost:8080 or apache2ctl start)
+  // "forwardPorts": [80,33006,8080]
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": ""
+  // Configure tool-specific properties.
+  "customizations": {
+    // "vscode": {
+    //   "extensions": [
+    //     "duboiss.sf-pack",
+    //     "cweijan.vscode-mysql-client2",
+    //     "ecmel.vscode-html-css"
+    //   ]
+    // }
+  },
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  "remoteUser": "root"
+}

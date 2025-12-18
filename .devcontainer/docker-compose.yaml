@@ -1,0 +1,56 @@
+name: "devcontainer-${NAME_APP}"
+services:
+  php-node:
+    container_name: "${NAME_APP}-dev"
+    build:
+      dockerfile: DockerfilePHPNode
+      args:
+        - NAME_APP=${NAME_APP}
+        - NODE_VERSION=${NODE_VERSION}
+        - PHP_VERSION=${PHP_VERSION}
+    ports:
+      - ${PORT_NODE}:3000
+      - ${PORT_SYMFONY}:8000
+    volumes:
+      - workspaces:${WORKSPACE_DIR}
+    working_dir: "${WORKSPACE_DIR}${NAME_APP}"
+    command: "sleep infinity"
+
+  mariadb:
+    container_name: "${NAME_APP}-sql"
+    build:
+      dockerfile: DockerfileMariaDB
+      args:
+        - MARIADB_VERSION=${MARIADB_VERSION}
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=${NAME_APP}
+      - MYSQL_USER=${NAME_APP}
+      - MYSQL_PASSWORD=${NAME_APP}
+    volumes:
+      - sqldata:/var/lib/mysql
+    command: --max_allowed_packet=1073741824      # Set max_allowed_packet to 256M (or any other value)
+
+  phpmyadmin:
+    container_name: "${NAME_APP}-myadmin"
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - ${PORT_PHPMYADMIN}:80
+    links:
+      - mariadb
+    environment:
+      PMA_HOST: "${NAME_APP}-sql"
+      PMA_USER: root
+      PMA_PASSWORD: root
+      PMA_PORT: 3306
+
+volumes:
+  sqldata:
+    name: "${NAME_APP}-sqldata"
+  workspaces:
+    name: "${NAME_APP}-workspaces"
+#    driver: local
+#    driver_opts:
+#      o: bind
+#      type: none
+#      device: /home/cchampion/Travail

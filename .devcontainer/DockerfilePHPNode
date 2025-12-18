@@ -1,0 +1,69 @@
+ARG PHP_VERSION
+FROM mcr.microsoft.com/devcontainers/php:$PHP_VERSION
+
+ARG NODE_VERSION
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+# Install nano
+RUN apt-get update \
+    && apt-get install -qy nano
+
+# Install locales FR
+ENV LANG=fr_FR.UTF-8
+ENV LC_ALL=$LANG
+ENV LANGUAGE=$LANG
+RUN apt-get update \
+    && apt-get install -y locales \
+    && sed -i "s/^# *\($LANG\)/\1/" /etc/locale.gen \
+    && locale-gen fr_FR.UTF-8
+
+# Set timezone Paris
+ENV TZ=Europe/Paris
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -qy tzdata \
+    && ln -sf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && dpkg-reconfigure -f noninteractive tzdata
+
+# Install dependances for GD extension for PHP
+RUN apt-get update \
+    && apt-get install -y \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd
+
+# Install dependances for MariaDB Driver for PHP
+RUN apt-get update \
+    && apt-get install -y libmariadb-dev \
+    && docker-php-ext-install pdo_mysql
+
+# Install dependances for Zip extension for PHP
+RUN apt-get update \
+    && apt-get install -y libzip-dev \
+    && docker-php-ext-install zip
+
+# Install dependances for Intl extension for PHP
+RUN apt-get update \
+    && apt-get install -y libicu-dev \
+    && docker-php-ext-install intl
+
+# Add memory for PHP
+RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory.ini
+
+# Install symfony
+RUN curl -sS https://get.symfony.com/cli/installer | bash \
+    && mv /root/.symfony5/bin/symfony /usr/local/bin
+
+# Install nvm and à version for Node.js
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+RUN echo " \
+    if [ -d '/root/.nvm' ]; then \
+    source /root/.nvm/nvm.sh; \
+    else \
+    source /usr/local/share/nvm/nvm.sh; \
+    fi && \
+    nvm install $NODE_VERSION && \
+    nvm alias default $NODE_VERSION && \
+    nvm use default" | bash

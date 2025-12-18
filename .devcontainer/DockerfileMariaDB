@@ -1,0 +1,18 @@
+ARG MARIADB_VERSION
+FROM mariadb:$MARIADB_VERSION
+
+# install locales FR
+ENV LANG=fr_FR.UTF-8
+ENV LC_ALL=$LANG
+ENV LANGUAGE=$LANG
+RUN apt-get update \
+    && apt-get install -y locales \
+    && sed -i "s/^# *\($LANG\)/\1/" /etc/locale.gen \
+    && locale-gen fr_FR.UTF-8
+
+# Set timezone Paris
+ENV TZ=Europe/Paris
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -qy tzdata \
+    && ln -sf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && dpkg-reconfigure -f noninteractive tzdata
