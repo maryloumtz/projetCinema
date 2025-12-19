@@ -1,17 +1,17 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-client.html.twig' %}
 
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
 
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/workspaces/projetCinema/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>/workspaces/projetCinema/templates/home/index.html.twig</code></li>
-    </ul>
+<div class="flex flex-row justify-between items-center mt-10">
+    <div class="w-5/10 h-auto">
+        <img src="../images/cinema-form.png" alt="Cinéma" class="object-cover rounded-lg shadow-lg">
+    </div>
+    
+    <div class="w-5/10 h-auto pl-10">
+        {% include 'client/form-contact/form.html.twig' %}
+    </div>
 </div>
+
 {% endblock %}
