@@ -1,6 +1,6 @@
 {% extends 'base-client.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}CineProject - Page d'accueil{% endblock %}
 
 {% block body %}
 
@@ -9,8 +9,8 @@
         <img src="../images/cinema-form.png" alt="Cinéma" class="object-cover rounded-lg shadow-lg">
     </div>
     
-    <div class="w-5/10 h-auto pl-10">
-        {% include 'client/form-contact/form.html.twig' %}
+    <div class="w-4/10 ml-auto h-auto pl-10">
+        {{ render(controller('App\\Controller\\HomeController::contact')) }}
     </div>
 </div>
 
