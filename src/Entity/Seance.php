@@ -16,6 +16,9 @@ class Seance
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $date = null;
+
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTime $horaire_debut = null;
 
@@ -36,6 +39,18 @@ class Seance
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): static
+    {
+        $this->date = $date;
+
+        return $this;
     }
 
     public function getHoraireDebut(): ?\DateTime

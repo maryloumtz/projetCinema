@@ -1,0 +1,23 @@
+{% extends 'espace-admin/layout.html.twig' %}
+
+{% set page_title = 'Accueil' %}
+{% set active_nav = 'accueil' %}
+
+{% block title %}Espace admin - Accueil{% endblock %}
+
+{% block admin_content %}
+    <section class="admin-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 auto-rows-[240px] gap-6">
+        <div class="admin-placeholder-card md:col-span-2 xl:col-span-1">
+            <div class="admin-placeholder-label">Séances du jour</div>
+        </div>
+        <div class="admin-placeholder-card md:col-span-2 xl:col-span-1">
+            <div class="admin-placeholder-label">Sorties à venir</div>
+        </div>
+        <div class="admin-placeholder-card xl:col-span-1">
+            <div class="admin-placeholder-label">Offres en cours</div>
+        </div>
+        <div class="admin-placeholder-card xl:col-span-1">
+            <div class="admin-placeholder-label">Chiffre d'affaire du mois</div>
+        </div>
+    </section>
+{% endblock %}

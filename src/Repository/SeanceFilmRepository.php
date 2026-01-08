@@ -16,6 +16,21 @@ class SeanceFilmRepository extends ServiceEntityRepository
         parent::__construct($registry, SeanceFilm::class);
     }
 
+    /**
+     * @return SeanceFilm[]
+     */
+    public function findAllWithDetails(): array
+    {
+        return $this->createQueryBuilder('sf')
+            ->leftJoin('sf.Film', 'film')->addSelect('film')
+            ->leftJoin('sf.seance', 'seance')->addSelect('seance')
+            ->leftJoin('sf.Salle', 'salle')->addSelect('salle')
+            ->orderBy('seance.date', 'ASC')
+            ->addOrderBy('seance.horaire_debut', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return SeanceFilm[] Returns an array of SeanceFilm objects
 //     */

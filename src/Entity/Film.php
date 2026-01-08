@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\FilmStatus;
 use App\Repository\FilmRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,6 +16,12 @@ class Film
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $tmdbId = null;
+
+    #[ORM\Column(length: 20, enumType: FilmStatus::class)]
+    private FilmStatus $status = FilmStatus::ARCHIVE;
 
     #[ORM\Column(length: 255)]
     private ?string $Nom = null;
@@ -55,6 +62,35 @@ class Film
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getTmdbId(): ?int
+    {
+        return $this->tmdbId;
+    }
+
+    public function setTmdbId(?int $tmdbId): static
+    {
+        $this->tmdbId = $tmdbId;
+
+        return $this;
+    }
+
+    public function getStatus(): FilmStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(FilmStatus $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function isDisponible(): bool
+    {
+        return $this->status === FilmStatus::DISPONIBLE;
     }
 
     public function getNom(): ?string
