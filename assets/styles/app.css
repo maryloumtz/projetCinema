@@ -1,6 +1,9 @@
 @import "tailwindcss";
+@import "./admin_style.css";
 @source not "../../public";
 
+html,
 body {
-    background-color: lightgray;
+  margin: 0;
+  padding: 0;
 }
