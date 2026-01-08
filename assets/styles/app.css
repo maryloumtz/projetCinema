@@ -1,40 +1,17 @@
 @import "tailwindcss";
+
 @source not "../../public";
 
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Irish+Grover&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Irish+Grover&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import './base.css';
+@import './client.css';
+
 
 @theme {
     --font-primary: 'poppins', sans-serif;
     --font-title: 'Bebas Neue', sans-serif;
 };
 
-body {
-    background-color: lightgray;
-    font-family: "poppins", sans-serif;
-}
 
-html{
-    font-size: 1rem;
-    scroll-behavior: smooth;
-}
-
-.btn{
-    font-size: .9rem;
-    line-height: 2rem;
-    font-weight: 400;
-    padding: .5rem 1rem;
-    border-radius: .5rem;
-    width: max-content;
-
-    background-color: rgba(41, 112, 255, 1);
-    color: white;
-    border: 1px solid rgba(41, 112, 255, 1);
-    transition: all .5s ease-in-out;
-}
-
-.btn:hover{
-    background-color: white;
-    color: rgba(41, 112, 255, 1);
-    cursor: pointer;
-}

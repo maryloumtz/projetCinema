@@ -1,0 +1,121 @@
+#description-extra {
+    display: inline;
+    overflow: hidden;
+}
+
+#description-extra.hidden {
+    display: none !important;
+}
+
+#description-extra:not(.hidden) {
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+        transform: translateY(0);
+    }
+}
+
+#description-extra.hiding {
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        max-height: 500px;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-10px);
+    }
+}
+
+.overlay-movie {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.overlay-movie::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5rem;
+    z-index: 10;
+    background: linear-gradient(0deg,rgba(0, 11, 32, 1) 20%, rgba(0, 0, 0, 0) 100%);
+}
+
+.overlay-movie::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 5rem;
+    height: 100%;
+    z-index: 10;
+    background: linear-gradient(270deg,rgba(0, 11, 32, 1) 20%, rgba(0, 0, 0, 0) 100%);
+}
+
+.Action{
+    border-color: rgba(41, 112, 255, 1);
+    color: rgba(41, 112, 255, 1);
+    background-color: rgba(209, 224, 255, 1);
+}
+
+
+.Aventure{
+    border-color: rgba(0, 128, 0, 1);
+    color: rgba(0, 128, 0, 1);
+    background-color: rgba(200, 255, 200, 1);
+}
+
+.Sport{
+    border-color: rgba(255, 165, 0, 1);
+    color: rgba(255, 165, 0, 1);
+    background-color: rgba(255, 235, 200, 1);
+}
+
+.Romance{
+    border-color: rgba(255, 20, 147, 1);
+    color: rgba(255, 20, 147, 1);
+    background-color: rgba(255, 200, 230, 1);
+}
+
+.Comedie{
+    border-color: rgba(255, 215, 0, 1);
+    color: rgba(255, 215, 0, 1);
+    background-color: rgba(255, 250, 200, 1);
+}
+.Drame{
+    border-color: rgba(128, 0, 128, 1);
+    color: rgba(128, 0, 128, 1);
+    background-color: rgba(230, 200, 230, 1);
+}
+.Horreur{
+    border-color: rgba(139, 0, 0, 1);
+    color: rgba(139, 0, 0, 1);
+    background-color: rgba(255, 200, 200, 1);
+}
+.Science-Fiction{
+    border-color: rgba(0, 191, 255, 1);
+    color: rgba(0, 191, 255, 1);
+    background-color: rgba(200, 240, 255, 1);
+}
+.Fantastique{
+    border-color: rgba(75, 0, 130, 1);
+    color: rgba(75, 0, 130, 1);
+    background-color: rgba(220, 200, 255, 1);
+}
