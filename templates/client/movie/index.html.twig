@@ -1,0 +1,100 @@
+{% extends 'base-client.html.twig' %}
+
+{% block title %}CinePulse - {{ film.Nom }}{% endblock %}
+
+{% block body %}
+
+<div class="">
+    <div class="flex flex-row items-start gap-6 h-133 pt-24">
+        <div class="container-photo-affiche">
+            {% if film.Image %}
+                <img src="{{ asset('images/' ~ film.Image) }}" alt="Affiche de {{ film.Nom }}" class="img-movie object-cover object-center w-200 h-133 absolute left-0 top-0">
+                <div class="w-200 h-133 absolute left-0 top-0">
+                    <div class="overlay-movie"></div>
+                </div>
+            {% else %}
+                <div class="w-200 h-133 bg-gray-700 flex items-center justify-center">
+                    <span class="text-gray-500">No Image</span>
+                </div>
+            {% endif %}
+        </div>
+        <div class="w-4/10 ml-auto">
+            <div class="flex flex-col gap-11">
+                {% if film.Categorie|length > 0 %}
+                    <div class="flex flex-row flex-wrap gap-2 mt-3">
+                        {% for categorie in film.Categorie %}
+                            <span class="px-3 py-1 text-xs font-semibold border-2 rounded-full {{ categorie.Nom }}">
+                                {{ categorie.Nom }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="flex flex-col gap-1">
+                    <h1 class="text-5xl font-title w-full">{{ film.Nom }}</h1>
+                    <div class="flex flex-row items-center gap-4">
+                        <p class="text-sm">{{ filmDuration }}</p>
+                        <span class="w-[5px] h-[6px] rounded-2xl bg-white"></span>
+                        <p class="text-sm">{{ film.Realisateur }}</p>
+                        {% if film.LimiteAge %}
+                            <span class="w-[5px] h-[6px] rounded-2xl bg-white"></span>
+                            <p class="text-sm">{{ film.LimiteAge }}+</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class=""> 
+                    <div id="description-container">
+                        <p class="text-sm" id="description-text">
+                            <span id="description-static">{{ film.Description[:300] }}</span><span id="description-extra" class="hidden transition-all duration-300 ease-in-out">{{ film.Description[300:] }}</span>
+                        </p>
+                        {% if film.Description|length > 300 %}
+                            <button id="toggle-description" class=" text-[10px] mb-4">
+                                Lire plus +
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="flex flex-row justify-between items-center mt-48">
+    <div class="w-5/10 h-auto">
+        <img src="../images/cinema-form.png" alt="Cinéma" class="object-cover rounded-lg shadow-lg">
+    </div>
+    
+    <div class="w-4/10 ml-auto h-auto pl-10">
+        {{ render(controller('App\\Controller\\HomeClientController::contact')) }}
+    </div>
+</div>
+
+<script>
+    const toggleBtn = document.getElementById('toggle-description');
+    const descriptionExtra = document.getElementById('description-extra');
+    
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+            const isHidden = descriptionExtra.classList.contains('hidden');
+            
+            if (isHidden) {
+                // Afficher le texte supplémentaire
+                descriptionExtra.classList.remove('hidden');
+                descriptionExtra.classList.remove('hiding');
+                
+                toggleBtn.textContent = 'Lire moins -';
+            } else {
+                // Masquer le texte supplémentaire
+                descriptionExtra.classList.add('hiding');
+                
+                setTimeout(() => {
+                    descriptionExtra.classList.add('hidden');
+                    descriptionExtra.classList.remove('hiding');
+                }, 600);
+                
+                toggleBtn.textContent = 'Lire plus +';
+            }
+        });
+    }
+</script>
+
+{% endblock %}

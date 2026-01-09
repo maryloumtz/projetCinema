@@ -1,0 +1,55 @@
+{% extends 'base-client.html.twig' %}
+
+{% block title %}CinePulse - Tous les films{% endblock %}
+
+{% block body %}
+
+<div class="py-12">
+    <h1 class="text-4xl font-bold mb-8">Nos films</h1>
+    
+    {% if films is empty %}
+        <p class="text-gray-400">Aucun film disponible pour le moment.</p>
+    {% else %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for film in films %}
+                <div class="bg-gray-900 rounded-lg overflow-hidden hover:transform hover:scale-105 transition-transform duration-300">
+                    <div class="aspect-video bg-gray-800 flex items-center justify-center">
+                        {% if film.Image %}
+                            <img src="{{ film.Image }}" alt="Affiche de {{ film.Nom }}" class="w-full h-full object-cover">
+                        {% else %}
+                            <span class="text-gray-500">No Image</span>
+                        {% endif %}
+                    </div>
+                    <div class="p-4">
+                        <h2 class="text-xl font-bold mb-2">{{ film.Nom }}</h2>
+                        <p class="text-sm text-gray-400 mb-2">
+                            <strong>Réalisateur :</strong> {{ film.Realisateur }}
+                        </p>
+                        <p class="text-sm text-gray-400 mb-2">
+                            <strong>Durée :</strong> {{ movieService.formatDuration(film.Duree) }}
+                        </p>
+                        {% if film.LimiteAge %}
+                            <p class="text-sm text-gray-400 mb-4">
+                                <strong>Limite d'âge :</strong> {{ film.LimiteAge }}+
+                            </p>
+                        {% endif %}
+                        {% if film.Categorie|length > 0 %}
+                            <div class="flex flex-row flex-wrap gap-2 mb-4">
+                                {% for categorie in film.Categorie %}
+                                    <span class="px-2 py-1 text-xs font-semibold bg-blue-600 text-white rounded-full">
+                                        {{ categorie.Nom }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <a href="{{ path('app_film_show', {'id': film.id}) }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Voir le détail
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
