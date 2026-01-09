@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\SeanceFilm;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -26,6 +27,23 @@ class SeanceFilmRepository extends ServiceEntityRepository
             ->leftJoin('sf.seance', 'seance')->addSelect('seance')
             ->leftJoin('sf.Salle', 'salle')->addSelect('salle')
             ->orderBy('seance.date', 'ASC')
+            ->addOrderBy('seance.horaire_debut', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return SeanceFilm[]
+     */
+    public function findForDate(\DateTimeInterface $date): array
+    {
+        return $this->createQueryBuilder('sf')
+            ->leftJoin('sf.Film', 'film')->addSelect('film')
+            ->leftJoin('sf.seance', 'seance')->addSelect('seance')
+            ->leftJoin('sf.Salle', 'salle')->addSelect('salle')
+            ->andWhere('seance.date = :date')
+            ->setParameter('date', $date, Types::DATE_MUTABLE)
+            ->orderBy('salle.Numero', 'ASC')
             ->addOrderBy('seance.horaire_debut', 'ASC')
             ->getQuery()
             ->getResult();

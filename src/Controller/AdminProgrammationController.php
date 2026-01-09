@@ -101,6 +101,98 @@ class AdminProgrammationController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
+    #[Route('/espace-admin/programmation/seances/{id}', name: 'espace_admin_programmation_update', methods: ['PATCH'])]
+    public function updateSeance(
+        SeanceFilm $seanceFilm,
+        Request $request,
+        FilmRepository $filmRepository,
+        SalleRepository $salleRepository,
+        EntityManagerInterface $entityManager
+    ): JsonResponse {
+        $payload = json_decode((string) $request->getContent(), true) ?? [];
+        $filmId = (int) ($payload['filmId'] ?? 0);
+        $salleId = (int) ($payload['salleId'] ?? 0);
+        $dateString = (string) ($payload['date'] ?? '');
+        $timeString = (string) ($payload['time'] ?? '');
+        $version = strtoupper((string) ($payload['version'] ?? 'VF'));
+
+        if (!in_array($version, ['VF', 'VO', 'VOST'], true)) {
+            return $this->json(['message' => 'Version invalide'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $film = $filmRepository->find($filmId);
+        if ($film === null) {
+            return $this->json(['message' => 'Film introuvable en base'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $salle = $salleRepository->find($salleId);
+        if ($salle === null) {
+            return $this->json(['message' => 'Salle introuvable'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $date = \DateTime::createFromFormat('Y-m-d', $dateString) ?: null;
+        $startTime = \DateTime::createFromFormat('H:i', $timeString) ?: null;
+
+        if ($date === null || $startTime === null) {
+            return $this->json(['message' => 'Date ou horaire invalide'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $duration = (int) ($film->getDuree() ?? 90);
+        $endTime = (clone $startTime)->add(new \DateInterval(sprintf('PT%dM', max($duration, 1))));
+
+        $seance = $seanceFilm->getSeance();
+        if ($seance === null) {
+            $seance = new Seance();
+            $entityManager->persist($seance);
+            $seanceFilm->setSeance($seance);
+        }
+
+        $seance->setDate($date);
+        $seance->setHoraireDebut($startTime);
+        $seance->setHoraireFin($endTime);
+
+        $seanceFilm->setFilm($film);
+        $seanceFilm->setSalle($salle);
+        $seanceFilm->setVersion($version);
+
+        $entityManager->flush();
+
+        return $this->json([
+            'id' => $seanceFilm->getId(),
+            'film' => [
+                'id' => $film->getId(),
+                'title' => $film->getNom(),
+                'status' => $film->getStatus()->value,
+            ],
+            'salle' => [
+                'id' => $salle->getId(),
+                'label' => 'Salle ' . $salle->getNumero(),
+            ],
+            'date' => $seance->getDate()?->format('Y-m-d'),
+            'time' => $seance->getHoraireDebut()?->format('H:i'),
+            'endTime' => $seance->getHoraireFin()?->format('H:i'),
+            'version' => $version,
+        ]);
+    }
+
+    #[Route('/espace-admin/programmation/seances/{id}', name: 'espace_admin_programmation_delete', methods: ['DELETE'])]
+    public function deleteSeance(
+        SeanceFilm $seanceFilm,
+        EntityManagerInterface $entityManager
+    ): JsonResponse {
+        $seance = $seanceFilm->getSeance();
+
+        $entityManager->remove($seanceFilm);
+
+        if ($seance !== null && $seance->getSeanceFilms()->count() <= 1) {
+            $entityManager->remove($seance);
+        }
+
+        $entityManager->flush();
+
+        return $this->json(['message' => 'Seance supprimee.']);
+    }
+
     #[Route('/espace-admin/programmation/seances', name: 'espace_admin_programmation_list', methods: ['GET'])]
     public function listSeances(SeanceFilmRepository $seanceFilmRepository): JsonResponse
     {

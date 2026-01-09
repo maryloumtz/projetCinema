@@ -55,16 +55,13 @@
                                 <div class="admin-film-infos">
                                     <div class="admin-film-header">
                                         <div>
-                                            <p class="admin-film-eyebrow">ID {{ film.id }}{% if film.tmdbId %} · Source {{ film.tmdbId }}{% endif %}</p>
                                             <h3 class="admin-film-title">{{ film.nom }}</h3>
                                             <p class="admin-film-meta">
                                                 <span>{{ film.duree }} min</span>
                                                 {% if film.realisateur %}<span>Réalisé par {{ film.realisateur }}</span>{% endif %}
                                             </p>
                                         </div>
-                                        <div class="admin-film-status {{ film.status.value == 'disponible' ? 'is-live' : 'is-archived' }}">
-                                            {{ film.status.label() }}
-                                        </div>
+                                        
                                     </div>
                                     <div class="admin-film-actions">
                                         <label class="admin-toggle">
@@ -76,9 +73,10 @@
                                                 {{ film.status.value == 'disponible' ? 'checked' }}
                                             >
                                             <span class="admin-toggle-slider"></span>
-                                            <span class="admin-toggle-label">A l'affiche</span>
+                                            <span class="admin-toggle-label">
+                                                {{ film.status.value == 'disponible' ? "A l'affiche" : 'Hors programmation' }}
+                                            </span>
                                         </label>
-                                        <span class="admin-film-duration">Statut par défaut: Hors programmation</span>
                                     </div>
                                 </div>
                             </article>

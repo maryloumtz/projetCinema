@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\SeanceFilmRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -35,9 +36,31 @@ class AdminSecurityController extends AbstractController
     }
 
     #[Route('/espace-admin/accueil', name: 'espace_admin_accueil', methods: ['GET'])]
-    public function accueil(): Response
+    public function accueil(SeanceFilmRepository $seanceFilmRepository): Response
     {
-        return $this->render('espace-admin/accueil.html.twig');
+        $today = new \DateTime('today');
+        $seancesDuJour = $seanceFilmRepository->findForDate($today);
+        $salles = [];
+
+        foreach ($seancesDuJour as $seanceFilm) {
+            $salle = $seanceFilm->getSalle();
+            if ($salle === null) {
+                continue;
+            }
+            $numero = $salle->getNumero();
+            if ($numero === null) {
+                continue;
+            }
+            $salles[$numero] = $numero;
+        }
+
+        ksort($salles);
+
+        return $this->render('espace-admin/accueil.html.twig', [
+            'today' => $today,
+            'seances_du_jour' => $seancesDuJour,
+            'salles_du_jour' => array_values($salles),
+        ]);
     }
 
     #[Route('/espace-admin/mot-de-passe-oublie', name: 'espace_admin_forgot_password', methods: ['GET', 'POST'])]

@@ -211,8 +211,8 @@
 
 .admin-grid {
   display: grid;
-  gap: 18px;
-  padding-top: 15dvh;
+  gap: 32px;
+  padding-top: 10dvh;
 }
 
 .admin-placeholder-card {
@@ -356,66 +356,39 @@
 }
 
 .admin-film-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 14px;
+  @apply grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4;
 }
 
 .admin-film-card {
-  background: linear-gradient(145deg, #111111, #0d0d0d);
-  border: 1px solid #1f1f1f;
-  border-radius: 14px;
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  overflow: hidden;
+  @apply flex flex-col md:flex-row bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.35)];
   min-height: 160px;
 }
 
 .admin-film-poster {
-  background-size: cover;
-  background-position: center;
+  @apply w-full h-48 md:w-32 md:h-auto bg-cover bg-center;
   background-color: #1f1f1f;
 }
 
 .admin-film-infos {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  @apply flex-1 p-4 flex flex-col gap-4;
+  min-height: 0;
 }
 
 .admin-film-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  align-items: flex-start;
+  @apply flex flex-col gap-3 md:flex-row md:items-start md:justify-between;
+  min-height: 72px;
 }
 
 .admin-film-title {
-  margin: 2px 0 4px;
-  font-size: 1.05rem;
+  @apply text-lg font-semibold text-slate-100;
 }
 
 .admin-film-eyebrow {
-  margin: 0;
-  color: #9ca3af;
-  font-size: 0.9rem;
+  @apply text-xs uppercase tracking-wide text-slate-400;
 }
 
 .admin-film-meta {
-  margin: 0;
-  color: #9ca3af;
-  font-size: 0.9rem;
-  display: flex;
-  gap: 8px;
-}
-
-.admin-film-status {
-  padding: 6px 10px;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  border: 1px solid #2b2b2b;
-  color: #f3f4f6;
+  @apply text-sm text-slate-400 flex flex-wrap gap-2;
 }
 
 .admin-film-status.is-live {
@@ -431,21 +404,16 @@
 }
 
 .admin-film-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  @apply flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between;
+  margin-top: auto;
 }
 
 .admin-film-duration {
-  color: #9ca3af;
-  font-size: 0.9rem;
+  @apply text-xs uppercase tracking-wide text-slate-400;
 }
 
 .admin-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  @apply flex items-center gap-2;
   cursor: pointer;
 }
 
@@ -483,7 +451,7 @@
 }
 
 .admin-toggle-label {
-  font-weight: 600;
+  @apply text-sm font-semibold text-slate-100;
 }
 
 .admin-empty {
@@ -626,6 +594,100 @@
   display: flex;
   gap: 8px;
   align-items: center;
+}
+
+.admin-modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 50;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.admin-modal.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.admin-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(3px);
+}
+
+.admin-modal-panel {
+  position: relative;
+  width: min(920px, 92vw);
+  background: #0f0f0f;
+  border: 1px solid #1f1f1f;
+  border-radius: 16px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  padding: 20px;
+  z-index: 1;
+}
+
+.admin-modal-panel--small {
+  width: min(420px, 90vw);
+}
+
+.admin-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.admin-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-modal-text {
+  margin: 0;
+  color: #d1d5db;
+}
+
+.admin-seance-actions {
+  display: inline-flex;
+  gap: 6px;
+  margin-left: 6px;
+}
+
+.admin-seance-button {
+  border: 1px solid #2b2b2b;
+  background: #111111;
+  color: #e5e7eb;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.admin-seance-button:hover {
+  border-color: #f3f4f6;
+}
+
+.admin-seance-button--danger {
+  border-color: rgba(248, 113, 113, 0.5);
+  color: #fca5a5;
+}
+
+.admin-seance-button--danger:hover {
+  border-color: #f87171;
+}
+
+.list-seances{
+  height: 20dvh;
+  overflow: auto;
+
 }
 
 .admin-badge {

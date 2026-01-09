@@ -168,11 +168,16 @@ export default class extends Controller {
             const payload = await response.json();
             const card = checkbox.closest('.admin-film-card');
             const statusEl = card ? card.querySelector('.admin-film-status') : null;
+            const toggleLabel = card ? card.querySelector('.admin-toggle-label') : null;
 
             if (statusEl) {
                 statusEl.textContent = payload.label || 'Hors programmation';
                 statusEl.classList.toggle('is-live', payload.status === 'disponible');
                 statusEl.classList.toggle('is-archived', payload.status !== 'disponible');
+            }
+
+            if (toggleLabel) {
+                toggleLabel.textContent = payload.status === 'disponible' ? "A l'affiche" : 'Hors programmation';
             }
         } catch (error) {
             checkbox.checked = !checkbox.checked;
