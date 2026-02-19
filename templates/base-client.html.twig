@@ -16,5 +16,13 @@
         <div class="w-screen px-4 sm:px-6 lg:px-36 bg-[#0f121b]  min-h-screen text-white relative">
             {% block body %}{% endblock %}
         </div>
+        {% if false %}
+            {% block client_navbar %}
+                {% include 'client/components/_navbar.html.twig' %}
+            {% endblock %}
+            {% block client_footer %}
+                {% include 'client/components/_footer.html.twig' %}
+            {% endblock %}
+        {% endif %}
     </body>
 </html>
