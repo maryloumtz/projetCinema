@@ -1,7 +1,7 @@
 {% extends 'espace-admin/layout.html.twig' %}
 
 {% set page_title = 'Programmation' %}
-{% set page_eyebrow = 'Seances' %}
+{% set page_eyebrow = 'Séances' %}
 {% set active_nav = 'programmation' %}
 
 {% block title %}Administration - Programmation{% endblock %}
@@ -13,16 +13,81 @@
         data-admin-programmation-film-url-value="{{ path('espace_admin_films_local') }}"
         data-admin-programmation-create-url-value="{{ path('espace_admin_programmation_create') }}"
         data-admin-programmation-seances-url-value="{{ path('espace_admin_programmation_list') }}"
+        data-admin-programmation-update-url-template-value="{{ path('espace_admin_programmation_update', {id: 0})|replace({'0': '__ID__'}) }}"
+        data-admin-programmation-delete-url-template-value="{{ path('espace_admin_programmation_delete', {id: 0})|replace({'0': '__ID__'}) }}"
     >
         <div class="admin-panel">
             <div class="admin-panel-header">
                 <div>
                     <p class="admin-panel-eyebrow">Programmation</p>
-                    <h2 class="admin-panel-title">Ajouter une seance</h2>
-                    <p class="admin-panel-subtitle">Uniquement a partir des films presentes en base locale.</p>
+                    <h2 class="admin-panel-title">Gestion des séances</h2>
                 </div>
             </div>
             <div class="admin-panel-body">
+                <button type="button" class="admin-primary-button" data-action="admin-programmation#openCreateModal">
+                    Ajouter une séance
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <div>
+                    <p class="admin-panel-eyebrow">Vue d'ensemble</p>
+                    <h2 class="admin-panel-title">Séances enregistrées</h2>
+                </div>
+            </div>
+            <div class="admin-panel-body">
+                <div class="admin-seance-list" data-admin-programmation-target="seanceList">
+                    {% if seances is not empty %}
+                        {% for seanceFilm in seances %}
+                            {% set seance = seanceFilm.seance %}
+                            <div
+                                class="admin-seance-card"
+                                data-seance-id="{{ seanceFilm.id }}"
+                                data-film-id="{{ seanceFilm.film ? seanceFilm.film.id : '' }}"
+                                data-film-title="{{ seanceFilm.film ? seanceFilm.film.nom : '' }}"
+                                data-film-status="{{ seanceFilm.film ? seanceFilm.film.status.label() : '' }}"
+                                data-salle-id="{{ seanceFilm.salle ? seanceFilm.salle.id : '' }}"
+                                data-date="{{ seance.date ? seance.date|date('Y-m-d') : '' }}"
+                                data-time="{{ seance.horaireDebut ? seance.horaireDebut|date('H:i') : '' }}"
+                                data-version="{{ seanceFilm.version }}"
+                            >
+                                <div>
+                                    <p class="admin-film-eyebrow">{{ seance.date ? seance.date|date('d/m/Y') : 'Date a definir' }} · {{ seance.horaireDebut ? seance.horaireDebut|date('H:i') : '--:--' }}</p>
+                                    <h3 class="admin-film-title">{{ seanceFilm.film ? seanceFilm.film.nom : 'Film supprime' }}</h3>
+                                    <p class="admin-film-meta">
+                                        <span>{{ seanceFilm.version }}</span>
+                                        <span>{{ seance.horaireFin ? seance.horaireFin|date('H:i') : '--:--' }}</span>
+                                    </p>
+                                </div>
+                                <div class="admin-seance-meta">
+                                    <span class="admin-badge">{{ seanceFilm.film ? seanceFilm.film.status.label() : 'Hors programmation' }}</span>
+                                    <span class="admin-badge">Salle {{ seanceFilm.salle ? seanceFilm.salle.numero : '?' }}</span>
+                                    <div class="admin-seance-actions">
+                                        <button type="button" class="admin-seance-button" data-action="admin-programmation#editSeance">Modifier</button>
+                                        <button type="button" class="admin-seance-button admin-seance-button--danger" data-action="admin-programmation#deleteSeance">Supprimer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="admin-empty">Aucune séance n'est encore programmée.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="admin-modal" data-admin-programmation-target="formModal" aria-hidden="true">
+            <div class="admin-modal-backdrop" data-action="click->admin-programmation#closeFormModal"></div>
+            <div class="admin-modal-panel" role="dialog" aria-modal="true">
+            <div class="admin-modal-header">
+                <div>
+                    <p class="admin-panel-eyebrow" data-admin-programmation-target="modalEyebrow">Ajout</p>
+                    <h3 class="admin-panel-title" data-admin-programmation-target="modalTitle">Ajouter une séance</h3>
+                </div>
+                <button type="button" class="admin-seance-button" data-action="admin-programmation#closeFormModal">Fermer</button>
+            </div>
+            <div class="admin-modal-body">
                 <form class="admin-form" data-action="submit->admin-programmation#createSeance">
                     <div class="admin-form-row">
                         <label class="admin-label" for="film-search">Film (base locale)</label>
@@ -38,7 +103,6 @@
                             >
                             <input type="hidden" data-admin-programmation-target="filmId">
                             <div class="admin-suggestions" data-admin-programmation-target="suggestions"></div>
-                            <div class="admin-hint">Le champ liste uniquement les films deja importes. Aucun appel externe.</div>
                         </div>
                     </div>
                     <div class="admin-form-row admin-form-row--inline">
@@ -69,46 +133,33 @@
                         </div>
                     </div>
                     <div class="admin-form-actions">
-                        <button type="submit" class="admin-primary-button">Programmer la seance</button>
+                        <button type="submit" class="admin-primary-button" data-admin-programmation-target="modalSubmit">Ajouter la séance</button>
+                        <button type="button" class="admin-ghost-button" data-action="admin-programmation#cancelEdit">Annuler</button>
                         <div class="admin-inline-message" data-admin-programmation-target="feedback"></div>
                     </div>
                 </form>
             </div>
         </div>
+        </div>
 
-        <div class="admin-panel">
-            <div class="admin-panel-header">
+        <div class="admin-modal" data-admin-programmation-target="deleteModal" aria-hidden="true">
+            <div class="admin-modal-backdrop" data-action="click->admin-programmation#closeDeleteModal"></div>
+            <div class="admin-modal-panel admin-modal-panel--small" role="dialog" aria-modal="true">
+            <div class="admin-modal-header">
                 <div>
-                    <p class="admin-panel-eyebrow">Vue d'ensemble</p>
-                    <h2 class="admin-panel-title">Seances enregistrees</h2>
-                    <p class="admin-panel-subtitle">Un film peut exister sans seance. Seules celles liees a la base locale apparaissent ici.</p>
+                    <p class="admin-panel-eyebrow">Suppression</p>
+                    <h3 class="admin-panel-title">Supprimer la séance ?</h3>
+                </div>
+                <button type="button" class="admin-seance-button" data-action="admin-programmation#closeDeleteModal">Fermer</button>
+            </div>
+            <div class="admin-modal-body">
+                <p class="admin-modal-text">Cette action est définitive. Voulez-vous continuer ?</p>
+                <div class="admin-form-actions">
+                    <button type="button" class="admin-primary-button admin-seance-button--danger" data-action="admin-programmation#confirmDelete">Oui, supprimer</button>
+                    <button type="button" class="admin-ghost-button" data-action="admin-programmation#closeDeleteModal">Annuler</button>
                 </div>
             </div>
-            <div class="admin-panel-body">
-                <div class="admin-seance-list" data-admin-programmation-target="seanceList">
-                    {% if seances is not empty %}
-                        {% for seanceFilm in seances %}
-                            {% set seance = seanceFilm.seance %}
-                            <div class="admin-seance-card">
-                                <div>
-                                    <p class="admin-film-eyebrow">{{ seance.date ? seance.date|date('d/m/Y') : 'Date a definir' }} · {{ seance.horaireDebut ? seance.horaireDebut|date('H:i') : '--:--' }}</p>
-                                    <h3 class="admin-film-title">{{ seanceFilm.film ? seanceFilm.film.nom : 'Film supprime' }}</h3>
-                                    <p class="admin-film-meta">
-                                        <span>{{ seanceFilm.version }}</span>
-                                        <span>{{ seance.horaireFin ? seance.horaireFin|date('H:i') : '--:--' }}</span>
-                                    </p>
-                                </div>
-                                <div class="admin-seance-meta">
-                                    <span class="admin-badge">{{ seanceFilm.film ? seanceFilm.film.status.label() : 'Hors programmation' }}</span>
-                                    <span class="admin-badge">Salle {{ seanceFilm.salle ? seanceFilm.salle.numero : '?' }}</span>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="admin-empty">Aucune seance n'est encore programmee.</div>
-                    {% endif %}
-                </div>
-            </div>
+        </div>
         </div>
     </section>
 {% endblock %}

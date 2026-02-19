@@ -34,7 +34,7 @@
                     >
                 </div>
                 <div class="admin-search-results" data-admin-films-target="results"></div>
-                <div class="admin-hint">L'import utilise la source externe uniquement pour recuperer les donnees, jamais pour l'affichage.</div>
+                <div class="admin-hint">L'import utilise la source externe uniquement pour récupérer les données, jamais pour l'affichage.</div>
             </div>
         </div>
 
@@ -54,16 +54,16 @@
                                 <div class="admin-film-poster" style="background-image: url('{{ film.image ?? '' }}')"></div>
                                 <div class="admin-film-infos">
                                     <div class="admin-film-header">
-                                        <div>
-                                            <p class="admin-film-eyebrow">ID {{ film.id }}{% if film.tmdbId %} · Source {{ film.tmdbId }}{% endif %}</p>
+                                        <div class="admin-film-text">
                                             <h3 class="admin-film-title">{{ film.nom }}</h3>
                                             <p class="admin-film-meta">
                                                 <span>{{ film.duree }} min</span>
-                                                {% if film.realisateur %}<span>Réalisé par {{ film.realisateur }}</span>{% endif %}
+                                                {% if film.genre %}<span>{{ film.genre }}</span>{% endif %}
                                             </p>
+                                            {% if film.realisateur %}<p class="admin-film-director">Réalisé par {{ film.realisateur }}</p>{% endif %}
                                         </div>
                                         <div class="admin-film-status {{ film.status.value == 'disponible' ? 'is-live' : 'is-archived' }}">
-                                            {{ film.status.label() }}
+                                            {{ film.status.value == 'disponible' ? "A l'affiche" : 'Hors programmation' }}
                                         </div>
                                     </div>
                                     <div class="admin-film-actions">
@@ -78,14 +78,13 @@
                                             <span class="admin-toggle-slider"></span>
                                             <span class="admin-toggle-label">A l'affiche</span>
                                         </label>
-                                        <span class="admin-film-duration">Statut par défaut: Hors programmation</span>
                                     </div>
                                 </div>
                             </article>
                         {% endfor %}
                     </div>
                 {% else %}
-                    <div class="admin-empty">Aucun film n'est encore present dans la base locale.</div>
+                    <div class="admin-empty">Aucun film n'est encore présent dans la base locale.</div>
                 {% endif %}
             </div>
         </div>

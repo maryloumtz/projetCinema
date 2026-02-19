@@ -95,6 +95,7 @@ class AdminFilmController extends AbstractController
         $film->setDescription($details['overview']);
         $film->setDuree((int) ($details['runtime'] ?? 0) ?: 90);
         $film->setImage($details['poster']);
+        $film->setGenre($details['genre'] ?: null);
         $film->setStatus(FilmStatus::ARCHIVE);
 
         $entityManager->persist($film);
@@ -106,6 +107,8 @@ class AdminFilmController extends AbstractController
             'title' => $film->getNom(),
             'poster' => $film->getImage(),
             'duration' => $film->getDuree(),
+            'genre' => $film->getGenre(),
+            'director' => $film->getRealisateur(),
             'status' => $film->getStatus()->value,
         ], Response::HTTP_CREATED);
     }

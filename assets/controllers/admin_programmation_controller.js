@@ -10,17 +10,26 @@ export default class extends Controller {
         'versionInput',
         'salleInput',
         'feedback',
-        'seanceList'
+        'seanceList',
+        'formModal',
+        'deleteModal',
+        'modalTitle',
+        'modalEyebrow',
+        'modalSubmit'
     ];
 
     static values = {
         filmUrl: String,
         createUrl: String,
-        seancesUrl: String
+        seancesUrl: String,
+        updateUrlTemplate: String,
+        deleteUrlTemplate: String
     };
 
     connect() {
         this.searchTimer = null;
+        this.editingId = null;
+        this.pendingDeleteId = null;
     }
 
     searchFilm() {
@@ -99,9 +108,14 @@ export default class extends Controller {
             return;
         }
 
+        const isEditing = Boolean(this.editingId);
+        const url = isEditing
+            ? this.updateUrlTemplateValue.replace('__ID__', this.editingId)
+            : this.createUrlValue;
+
         try {
-            const response = await fetch(this.createUrlValue, {
-                method: 'POST',
+            const response = await fetch(url, {
+                method: isEditing ? 'PATCH' : 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     filmId: parseInt(filmId, 10),
@@ -118,15 +132,16 @@ export default class extends Controller {
                 return;
             }
 
-            this.showFeedback('Seance ajoutee.', 'success');
-            this.resetForm();
+            this.showFeedback(isEditing ? 'Seance mise a jour.' : 'Seance ajoutee.', 'success');
+            this.resetForm(true);
+            this.closeFormModal();
             this.refreshSeances();
         } catch (error) {
-            this.showFeedback('Erreur lors de la creation.', 'error');
+            this.showFeedback(isEditing ? 'Erreur lors de la mise a jour.' : 'Erreur lors de la creation.', 'error');
         }
     }
 
-    resetForm() {
+    resetForm(clearEdit = false) {
         this.filmInputTarget.value = '';
         this.filmIdTarget.value = '';
         this.dateInputTarget.value = '';
@@ -134,6 +149,11 @@ export default class extends Controller {
         this.versionInputTarget.value = 'VF';
         this.salleInputTarget.value = '';
         this.suggestionsTarget.innerHTML = '';
+
+        if (clearEdit) {
+            this.editingId = null;
+            this.updateModalLabels(false);
+        }
     }
 
     async refreshSeances() {
@@ -165,7 +185,17 @@ export default class extends Controller {
         const filmStatus = seance.film?.status || 'Hors programmation';
 
         return `
-            <div class="admin-seance-card">
+            <div
+                class="admin-seance-card"
+                data-seance-id="${seance.id}"
+                data-film-id="${seance.film?.id || ''}"
+                data-film-title="${seance.film?.title || ''}"
+                data-film-status="${seance.film?.status || ''}"
+                data-salle-id="${seance.salle?.id || ''}"
+                data-date="${seance.date || ''}"
+                data-time="${seance.time || ''}"
+                data-version="${seance.version || ''}"
+            >
                 <div>
                     <p class="admin-film-eyebrow">${date} · ${time}</p>
                     <h3 class="admin-film-title">${filmTitle}</h3>
@@ -174,6 +204,10 @@ export default class extends Controller {
                 <div class="admin-seance-meta">
                     <span class="admin-badge">${filmStatus}</span>
                     <span class="admin-badge">${salle}</span>
+                    <div class="admin-seance-actions">
+                        <button type="button" class="admin-seance-button" data-action="admin-programmation#editSeance">Modifier</button>
+                        <button type="button" class="admin-seance-button admin-seance-button--danger" data-action="admin-programmation#deleteSeance">Supprimer</button>
+                    </div>
                 </div>
             </div>
         `;
@@ -187,5 +221,110 @@ export default class extends Controller {
     showFeedback(message, type = 'info') {
         this.feedbackTarget.textContent = message;
         this.feedbackTarget.dataset.state = type;
+    }
+
+    cancelEdit() {
+        this.resetForm(true);
+        this.closeFormModal();
+    }
+
+    editSeance(event) {
+        const card = event.currentTarget.closest('.admin-seance-card');
+        if (!card) {
+            return;
+        }
+
+        this.editingId = card.dataset.seanceId || null;
+        if (!this.editingId || !card.dataset.filmId) {
+            this.showFeedback('Impossible de modifier une seance sans film valide.', 'error');
+            return;
+        }
+
+        this.filmIdTarget.value = card.dataset.filmId || '';
+        this.filmInputTarget.value = card.dataset.filmTitle
+            ? `${card.dataset.filmTitle} (${card.dataset.filmStatus || ''})`
+            : '';
+        this.dateInputTarget.value = card.dataset.date || '';
+        this.timeInputTarget.value = card.dataset.time || '';
+        this.versionInputTarget.value = card.dataset.version || 'VF';
+        this.salleInputTarget.value = card.dataset.salleId || '';
+        this.updateModalLabels(true);
+        this.openFormModal();
+        this.showFeedback('Mode edition actif.', 'info');
+    }
+
+    deleteSeance(event) {
+        const card = event.currentTarget.closest('.admin-seance-card');
+        if (!card) {
+            return;
+        }
+
+        const seanceId = card.dataset.seanceId;
+        if (!seanceId) {
+            return;
+        }
+
+        this.pendingDeleteId = seanceId;
+        this.openDeleteModal();
+    }
+
+    async confirmDelete() {
+        if (!this.pendingDeleteId) {
+            return;
+        }
+
+        const url = this.deleteUrlTemplateValue.replace('__ID__', this.pendingDeleteId);
+
+        try {
+            const response = await fetch(url, { method: 'DELETE' });
+            if (!response.ok) {
+                const payload = await response.json().catch(() => ({}));
+                this.showFeedback(payload.message || 'Suppression impossible.', 'error');
+                return;
+            }
+
+            if (this.editingId === this.pendingDeleteId) {
+                this.resetForm(true);
+            }
+
+            this.showFeedback('Seance supprimee.', 'success');
+            this.closeDeleteModal();
+            this.refreshSeances();
+        } catch (error) {
+            this.showFeedback('Erreur lors de la suppression.', 'error');
+        }
+    }
+
+    openCreateModal() {
+        this.resetForm(true);
+        this.updateModalLabels(false);
+        this.openFormModal();
+    }
+
+    openFormModal() {
+        this.formModalTarget.classList.add('is-active');
+        this.formModalTarget.setAttribute('aria-hidden', 'false');
+    }
+
+    closeFormModal() {
+        this.formModalTarget.classList.remove('is-active');
+        this.formModalTarget.setAttribute('aria-hidden', 'true');
+    }
+
+    openDeleteModal() {
+        this.deleteModalTarget.classList.add('is-active');
+        this.deleteModalTarget.setAttribute('aria-hidden', 'false');
+    }
+
+    closeDeleteModal() {
+        this.deleteModalTarget.classList.remove('is-active');
+        this.deleteModalTarget.setAttribute('aria-hidden', 'true');
+        this.pendingDeleteId = null;
+    }
+
+    updateModalLabels(isEditing) {
+        this.modalEyebrowTarget.textContent = isEditing ? 'Edition' : 'Ajout';
+        this.modalTitleTarget.textContent = isEditing ? 'Modifier la seance' : 'Ajouter une seance';
+        this.modalSubmitTarget.textContent = isEditing ? 'Mettre a jour' : 'Ajouter la seance';
     }
 }

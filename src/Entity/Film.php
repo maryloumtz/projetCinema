@@ -41,6 +41,9 @@ class Film
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Image = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $Genre = null;
+
     /**
      * @var Collection<int, Categories>
      */
@@ -161,6 +164,18 @@ class Film
     public function setImage(?string $Image): static
     {
         $this->Image = $Image;
+
+        return $this;
+    }
+
+    public function getGenre(): ?string
+    {
+        return $this->Genre;
+    }
+
+    public function setGenre(?string $Genre): static
+    {
+        $this->Genre = $Genre;
 
         return $this;
     }
