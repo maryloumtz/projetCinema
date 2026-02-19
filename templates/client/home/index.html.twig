@@ -3,15 +3,109 @@
 {% block title %}CinePulse - Page d'accueil{% endblock %}
 
 {% block body %}
-
-<div class="flex flex-row justify-between items-center mt-10">
-    <div class="w-5/10 h-auto">
-        <img src="../images/cinema-form.png" alt="Cinéma" class="object-cover rounded-lg shadow-lg">
+    <aside class="client-sidebar">
+        <div class="client-sidebar__inner">
+            <p class="client-sidebar__title">Genres</p>
+            <ul class="client-sidebar__list">
+                <li class="client-sidebar__item client-sidebar__item--fiction">
+                    <a class="client-sidebar__link" href="#genre-fiction">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Fiction</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--fantasy">
+                    <a class="client-sidebar__link" href="#genre-fantaisie">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Fantaisie</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--action">
+                    <a class="client-sidebar__link" href="#genre-action">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Action</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--adventure">
+                    <a class="client-sidebar__link" href="#genre-aventure">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Aventure</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--comedy">
+                    <a class="client-sidebar__link" href="#genre-comedie">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Comedie</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--drama">
+                    <a class="client-sidebar__link" href="#genre-drame">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Drame</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--horror">
+                    <a class="client-sidebar__link" href="#genre-horreur">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Horreur</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--scifi">
+                    <a class="client-sidebar__link" href="#genre-scifi">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Science-Fiction</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--animation">
+                    <a class="client-sidebar__link" href="#genre-animation">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Animation</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--romance">
+                    <a class="client-sidebar__link" href="#genre-romance">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Romance</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <div class="client-home-content">
+        <header class="client-navbar">
+            <div class="client-navbar__logo">
+                <img class="client-navbar__logo-img" src="{{ asset('images/logo-temp.svg') }}" alt="Senpai Stream">
+            </div>
+            <div class="client-navbar__search" role="search">
+                <span class="client-navbar__search-icon" aria-hidden="true"></span>
+                <input class="client-navbar__search-input" type="search" placeholder="Recherchez des films, séries, animés ..." aria-label="Rechercher">
+                <span class="client-navbar__search-hint">Ctrl + Q</span>
+            </div>
+            <div class="client-navbar__actions">
+                <a class="client-navbar__link" href="#">Se connecter</a>
+                <a class="client-navbar__cta" href="#">
+                    S'inscrire
+                    <span class="client-navbar__cta-icon" aria-hidden="true">&rarr;</span>
+                </a>
+            </div>
+        </header>
+        <footer class="client-footer">
+            <div class="client-footer__content">
+                <div class="client-footer__brand">
+                    <span class="client-footer__logo">CinePulse Cinema</span>
+                    <p class="client-footer__tagline">Seances, avant-premieres et evenements.</p>
+                </div>
+                <div class="client-footer__info">
+                    <span>billetterie@cinepulse.fr</span>
+                    <span>01 84 00 00 00</span>
+                    <span>12 rue des Lumieres, Paris</span>
+                </div>
+                <div class="client-footer__legal">
+                    <a href="#">Infos pratiques</a>
+                    <a href="#">Tarifs</a>
+                    <span>(c) {{ "now"|date("Y") }} CinePulse Cinema</span>
+                </div>
+            </div>
+        </footer>
     </div>
-    
-    <div class="w-4/10 ml-auto h-auto pl-10">
-        {{ render(controller('App\\Controller\\HomeClientController::contact')) }}
-    </div>
-</div>
 
 {% endblock %}
