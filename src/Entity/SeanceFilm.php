@@ -27,6 +27,9 @@ class SeanceFilm
     #[ORM\JoinColumn(nullable: false)]
     private ?Salle $Salle = null;
 
+    #[ORM\Column(length: 10)]
+    private ?string $version = null;
+
     /**
      * @var Collection<int, Reservation>
      */
@@ -75,6 +78,18 @@ class SeanceFilm
     public function setSalle(?Salle $Salle): static
     {
         $this->Salle = $Salle;
+
+        return $this;
+    }
+
+    public function getVersion(): ?string
+    {
+        return $this->version;
+    }
+
+    public function setVersion(string $version): static
+    {
+        $this->version = $version;
 
         return $this;
     }

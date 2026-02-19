@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title|default('Espace admin') }}{% endblock %}
+{% block body_class %}admin-dashboard{% endblock %}
+
+{% block body %}
+    <div class="admin-shell">
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-logo-mark">LOGO</div>
+                <div>
+                    <div class="admin-sidebar-eyebrow">Tableau de bord</div>
+                    <div class="admin-sidebar-title">Espace admin</div>
+                </div>
+            </div>
+            <nav class="admin-nav">
+                <a class="admin-nav-link {{ active_nav is defined and active_nav == 'accueil' ? 'is-active' }}" href="{{ path('espace_admin_accueil') }}"><span>Accueil</span></a>
+                <a class="admin-nav-link {{ active_nav is defined and active_nav == 'films' ? 'is-active' }}" href="{{ path('espace_admin_films') }}"><span>Films</span></a>
+                <a class="admin-nav-link {{ active_nav is defined and active_nav == 'programmation' ? 'is-active' }}" href="{{ path('espace_admin_programmation') }}"><span>Programmation</span></a>
+                <a class="admin-nav-link" href="#"><span>Offres & campagnes</span></a>
+                <a class="admin-nav-link" href="#"><span>Billetterie</span></a>
+                <a class="admin-nav-link" href="#"><span>Rapports</span></a>
+                <a class="admin-nav-link admin-nav-logout" href="{{ path('espace_admin_logout') }}"><span>Déconnexion</span></a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-topbar">
+                <div>
+                    {% if page_eyebrow is defined %}
+                        <p class="admin-topbar-eyebrow">{{ page_eyebrow }}</p>
+                    {% endif %}
+                    <h1 class="admin-topbar-title">{{ page_title|default('Espace admin') }}</h1>
+                </div>
+                {% block admin_topbar_action %}
+                    <a class="admin-ghost-button" href="/">Accéder au site client</a>
+                {% endblock %}
+            </header>
+
+            {% block admin_content %}{% endblock %}
+        </main>
+    </div>
+{% endblock %}

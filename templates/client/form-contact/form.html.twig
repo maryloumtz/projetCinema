@@ -1,0 +1,100 @@
+<div class="flex flex-col gap-14 w-full items-end justify-start">
+        {# {% if success %}
+        <div class="w-full bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg" role="alert">
+            <span class="block sm:inline">✓ Votre message a été envoyé avec succès!</span>
+        </div>
+    {% endif %}
+
+    {% if errors %}
+        {% for error in errors %}
+            <div class="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg" role="alert">
+                <span class="block sm:inline">✗ {{ error }}</span>
+            </div>
+        {% endfor %}
+    {% endif %} #}
+
+        
+    <div class="flex flex-col gap-2">
+        <h2 class="text-2xl font-bold font-title text-white">Besoin d'aide ? CONTACTEZ NOUS !</h2>
+        <p class="text-white font-primary text-sm leading-4">
+            Utilisez ce formulaire pour contacter nous directement. Nous vous répondrons dans les meilleurs délais afin de vous apporter une réponse adaptée.
+        </p>
+    </div>
+
+    {{ form_start(form, {'attr': {'class': 'flex flex-row flex-wrap gap-6', 'data-turbo': 'false'}}) }}
+
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="w-full {% if label == 'success' %}bg-green-100 border border-green-400 text-green-700{% else %}bg-red-100 border border-red-400 text-red-700{% endif %} px-4 py-3 rounded-lg" role="alert">
+                <span class="block sm:inline">{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {{ form_errors(form) }}
+
+    {% for message in app.flashes('success') %}
+        <div class="w-full bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg" role="alert">
+            <span class="block sm:inline">{{ message }}</span>
+        </div>
+    {% endfor %}
+
+    <div class="w-[calc(50%-12px)]">
+        {{ form_row(form.Prenom, {
+            'label': 'Prénom',
+            'attr': {
+                'class': 'bg-white w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-[10px]'
+            },
+            'label_attr': {'class': 'text-white block text-[10px] font-medium text-gray-700 mb-1'}
+        }) }}
+    </div>
+
+    <div class="w-[calc(50%-12px)]">
+        {{ form_row(form.Nom, {
+            'label': 'Nom de famille',
+            'attr': {
+                'class': 'bg-white w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-[10px]'
+            },
+            'label_attr': {'class': 'text-white block text-[10px] font-medium text-gray-700 mb-1'}
+        }) }}
+    </div>
+
+    <div class="w-[calc(50%-12px)]">
+        {{ form_row(form.Email, {
+            'label': 'Email',
+            'attr': {
+                'class': 'bg-white w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-[10px]'
+            },
+            'label_attr': {'class': 'text-white block text-[10px] font-medium text-gray-700 mb-1'}
+        }) }}
+    </div>
+
+    <div class="w-[calc(50%-12px)]">
+        {{ form_row(form.Telephone, {
+            'label': 'Téléphone',
+            'attr': {
+                'class': 'bg-white w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-[10px]'
+            },
+            'label_attr': {'class': 'text-white block text-[10px] font-medium text-gray-700 mb-1'}
+        }) }}
+    </div>
+    
+    <div class="w-full">
+        {{ form_row(form.Description, {
+            'label': 'Votre message',
+            'attr': {
+                'class': 'bg-white w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-black text-[10px]',
+                'rows': 5
+            },
+            'label_attr': {'class': 'text-white block text-[10px] font-medium text-gray-700 mb-1'}
+        }) }}
+    </div>
+    
+    <div class="w-full flex justify-end">
+        <button type="submit" class="btn left-auto">
+            Envoyer votre message
+        </button>
+    </div>
+    
+    {{ form_end(form) }}
+</div>

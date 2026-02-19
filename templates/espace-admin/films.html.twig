@@ -1,0 +1,92 @@
+{% extends 'espace-admin/layout.html.twig' %}
+
+{% set page_title = 'Films' %}
+{% set page_eyebrow = 'Catalogue local' %}
+{% set active_nav = 'films' %}
+
+{% block title %}Administration - Films{% endblock %}
+
+{% block admin_content %}
+    <section
+        class="admin-panels"
+        data-controller="admin-films"
+        data-admin-films-search-url-value="{{ path('espace_admin_tmdb_search') }}"
+        data-admin-films-import-url-value="{{ path('espace_admin_films_import') }}"
+        data-admin-films-status-url-template-value="{{ path('espace_admin_films_status', {id: 0})|replace({'0': '__ID__'}) }}"
+    >
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <div>
+                    <p class="admin-panel-eyebrow">Ajout</p>
+                    <h2 class="admin-panel-title">Ajouter un film</h2>
+                    <p class="admin-panel-subtitle">Recherche dynamique puis import dans la base locale (statut initial: Hors programmation).</p>
+                </div>
+            </div>
+            <div class="admin-panel-body">
+                <div class="admin-search">
+                    <input
+                        type="text"
+                        class="admin-input"
+                        placeholder="Rechercher un film..."
+                        data-admin-films-target="searchInput"
+                        data-action="input->admin-films#queueSearch keydown.enter->admin-films#preventSubmit"
+                        autocomplete="off"
+                    >
+                </div>
+                <div class="admin-search-results" data-admin-films-target="results"></div>
+                <div class="admin-hint">L'import utilise la source externe uniquement pour récupérer les données, jamais pour l'affichage.</div>
+            </div>
+        </div>
+
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <div>
+                    <p class="admin-panel-eyebrow">Catalogue</p>
+                    <h2 class="admin-panel-title">Films en base</h2>
+                    <p class="admin-panel-subtitle">Basculez un film en "A l'affiche" pour qu'il soit pris en compte dans la programmation.</p>
+                </div>
+            </div>
+            <div class="admin-panel-body" data-admin-films-target="catalogBody">
+                {% if films is not empty %}
+                    <div class="admin-film-grid">
+                        {% for film in films %}
+                            <article class="admin-film-card" data-film-id="{{ film.id }}">
+                                <div class="admin-film-poster" style="background-image: url('{{ film.image ?? '' }}')"></div>
+                                <div class="admin-film-infos">
+                                    <div class="admin-film-header">
+                                        <div class="admin-film-text">
+                                            <h3 class="admin-film-title">{{ film.nom }}</h3>
+                                            <p class="admin-film-meta">
+                                                <span>{{ film.duree }} min</span>
+                                                {% if film.genre %}<span>{{ film.genre }}</span>{% endif %}
+                                            </p>
+                                            {% if film.realisateur %}<p class="admin-film-director">Réalisé par {{ film.realisateur }}</p>{% endif %}
+                                        </div>
+                                        <div class="admin-film-status {{ film.status.value == 'disponible' ? 'is-live' : 'is-archived' }}">
+                                            {{ film.status.value == 'disponible' ? "A l'affiche" : 'Hors programmation' }}
+                                        </div>
+                                    </div>
+                                    <div class="admin-film-actions">
+                                        <label class="admin-toggle">
+                                            <input
+                                                type="checkbox"
+                                                class="admin-toggle-input"
+                                                data-action="change->admin-films#toggleStatus"
+                                                data-film-id="{{ film.id }}"
+                                                {{ film.status.value == 'disponible' ? 'checked' }}
+                                            >
+                                            <span class="admin-toggle-slider"></span>
+                                            <span class="admin-toggle-label">A l'affiche</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="admin-empty">Aucun film n'est encore présent dans la base locale.</div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

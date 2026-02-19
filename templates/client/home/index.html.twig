@@ -1,0 +1,77 @@
+{% extends 'base-client.html.twig' %}
+
+{% block title %}CinePulse - Page d'accueil{% endblock %}
+
+{% block body %}
+    <aside class="client-sidebar">
+        <div class="client-sidebar__inner">
+            <p class="client-sidebar__title">Genres</p>
+            <ul class="client-sidebar__list">
+                <li class="client-sidebar__item client-sidebar__item--fiction">
+                    <a class="client-sidebar__link" href="#genre-fiction">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Fiction</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--fantasy">
+                    <a class="client-sidebar__link" href="#genre-fantaisie">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Fantaisie</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--action">
+                    <a class="client-sidebar__link" href="#genre-action">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Action</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--adventure">
+                    <a class="client-sidebar__link" href="#genre-aventure">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Aventure</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--comedy">
+                    <a class="client-sidebar__link" href="#genre-comedie">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Comedie</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--drama">
+                    <a class="client-sidebar__link" href="#genre-drame">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Drame</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--horror">
+                    <a class="client-sidebar__link" href="#genre-horreur">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Horreur</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--scifi">
+                    <a class="client-sidebar__link" href="#genre-scifi">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Science-Fiction</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--animation">
+                    <a class="client-sidebar__link" href="#genre-animation">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Animation</span>
+                    </a>
+                </li>
+                <li class="client-sidebar__item client-sidebar__item--romance">
+                    <a class="client-sidebar__link" href="#genre-romance">
+                        <span class="client-sidebar__icon" aria-hidden="true"></span>
+                        <span class="client-sidebar__label">Romance</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <div class="client-home-content">
+        {{ block('client_navbar') }}
+        {{ block('client_footer') }}
+    </div>
+{% endblock %}
