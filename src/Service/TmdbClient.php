@@ -69,7 +69,7 @@ class TmdbClient
     /**
      * Fetch detailed movie info from TMDB to seed local database.
      *
-     * @return array{id:int,title:string,runtime:?int,overview:?string,poster:?string}|null
+     * @return array{id:int,title:string,runtime:?int,overview:?string,poster:?string,director:string,genre:string}|null
      */
     public function fetchMovieDetails(int $tmdbId): ?array
     {
@@ -96,6 +96,7 @@ class TmdbClient
                 'overview' => $movie['overview'] ?? null,
                 'poster' => $posterPath ? $this->tmdbImageBaseUrl . $posterPath : null,
                 'director' => $this->extractDirector($movie['credits']['crew'] ?? []),
+                'genre' => $this->extractPrimaryGenre($movie['genres'] ?? []),
             ];
         } catch (HttpExceptionInterface $exception) {
             $this->logger->warning('TMDB fetch failed', ['status' => $exception->getCode(), 'message' => $exception->getMessage()]);
@@ -114,6 +115,21 @@ class TmdbClient
         foreach ($crew as $member) {
             if (isset($member['job']) && strtolower((string) $member['job']) === 'director') {
                 return (string) ($member['name'] ?? '');
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @param array<int, array{id?:int,name?:string}> $genres
+     */
+    private function extractPrimaryGenre(array $genres): string
+    {
+        foreach ($genres as $genre) {
+            $name = trim((string) ($genre['name'] ?? ''));
+            if ($name !== '') {
+                return $name;
             }
         }
 

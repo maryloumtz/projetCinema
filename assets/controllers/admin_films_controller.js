@@ -105,12 +105,14 @@ export default class extends Controller {
                 <div class="admin-film-poster" style="background-image: url('${film.poster ?? ''}')"></div>
                 <div class="admin-film-infos">
                     <div class="admin-film-header">
-                        <div>
+                        <div class="admin-film-text">
                             <p class="admin-film-eyebrow">ID ${film.id}${film.tmdbId ? ' · Source ' + film.tmdbId : ''}</p>
                             <h3 class="admin-film-title">${film.title}</h3>
                             <p class="admin-film-meta">
                                 <span>${film.duration ?? '?'} min</span>
+                                ${film.genre ? `<span>${film.genre}</span>` : ''}
                             </p>
+                            ${film.director ? `<p class="admin-film-director">Realise par ${film.director}</p>` : ''}
                         </div>
                         <div class="admin-film-status is-archived">Hors programmation</div>
                     </div>
@@ -125,7 +127,6 @@ export default class extends Controller {
                             <span class="admin-toggle-slider"></span>
                             <span class="admin-toggle-label">A l'affiche</span>
                         </label>
-                        <span class="admin-film-duration">Statut par defaut: Hors programmation</span>
                     </div>
                 </div>
             </article>
@@ -168,16 +169,11 @@ export default class extends Controller {
             const payload = await response.json();
             const card = checkbox.closest('.admin-film-card');
             const statusEl = card ? card.querySelector('.admin-film-status') : null;
-            const toggleLabel = card ? card.querySelector('.admin-toggle-label') : null;
 
             if (statusEl) {
                 statusEl.textContent = payload.label || 'Hors programmation';
                 statusEl.classList.toggle('is-live', payload.status === 'disponible');
                 statusEl.classList.toggle('is-archived', payload.status !== 'disponible');
-            }
-
-            if (toggleLabel) {
-                toggleLabel.textContent = payload.status === 'disponible' ? "A l'affiche" : 'Hors programmation';
             }
         } catch (error) {
             checkbox.checked = !checkbox.checked;

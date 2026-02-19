@@ -1,7 +1,7 @@
 {% extends 'espace-admin/layout.html.twig' %}
 
 {% set page_title = 'Programmation' %}
-{% set page_eyebrow = 'Seances' %}
+{% set page_eyebrow = 'Séances' %}
 {% set active_nav = 'programmation' %}
 
 {% block title %}Administration - Programmation{% endblock %}
@@ -20,12 +20,12 @@
             <div class="admin-panel-header">
                 <div>
                     <p class="admin-panel-eyebrow">Programmation</p>
-                    <h2 class="admin-panel-title">Gestion des seances</h2>
+                    <h2 class="admin-panel-title">Gestion des séances</h2>
                 </div>
             </div>
             <div class="admin-panel-body">
                 <button type="button" class="admin-primary-button" data-action="admin-programmation#openCreateModal">
-                    Ajouter une seance
+                    Ajouter une séance
                 </button>
             </div>
         </div>
@@ -34,7 +34,7 @@
             <div class="admin-panel-header">
                 <div>
                     <p class="admin-panel-eyebrow">Vue d'ensemble</p>
-                    <h2 class="admin-panel-title">Seances enregistrees</h2>
+                    <h2 class="admin-panel-title">Séances enregistrées</h2>
                 </div>
             </div>
             <div class="admin-panel-body">
@@ -72,7 +72,7 @@
                             </div>
                         {% endfor %}
                     {% else %}
-                        <div class="admin-empty">Aucune seance n'est encore programmee.</div>
+                        <div class="admin-empty">Aucune séance n'est encore programmée.</div>
                     {% endif %}
                 </div>
             </div>
@@ -83,7 +83,7 @@
             <div class="admin-modal-header">
                 <div>
                     <p class="admin-panel-eyebrow" data-admin-programmation-target="modalEyebrow">Ajout</p>
-                    <h3 class="admin-panel-title" data-admin-programmation-target="modalTitle">Ajouter une seance</h3>
+                    <h3 class="admin-panel-title" data-admin-programmation-target="modalTitle">Ajouter une séance</h3>
                 </div>
                 <button type="button" class="admin-seance-button" data-action="admin-programmation#closeFormModal">Fermer</button>
             </div>
@@ -133,7 +133,7 @@
                         </div>
                     </div>
                     <div class="admin-form-actions">
-                        <button type="submit" class="admin-primary-button" data-admin-programmation-target="modalSubmit">Ajouter la seance</button>
+                        <button type="submit" class="admin-primary-button" data-admin-programmation-target="modalSubmit">Ajouter la séance</button>
                         <button type="button" class="admin-ghost-button" data-action="admin-programmation#cancelEdit">Annuler</button>
                         <div class="admin-inline-message" data-admin-programmation-target="feedback"></div>
                     </div>
@@ -148,12 +148,12 @@
             <div class="admin-modal-header">
                 <div>
                     <p class="admin-panel-eyebrow">Suppression</p>
-                    <h3 class="admin-panel-title">Supprimer la seance ?</h3>
+                    <h3 class="admin-panel-title">Supprimer la séance ?</h3>
                 </div>
                 <button type="button" class="admin-seance-button" data-action="admin-programmation#closeDeleteModal">Fermer</button>
             </div>
             <div class="admin-modal-body">
-                <p class="admin-modal-text">Cette action est definitive. Voulez-vous continuer ?</p>
+                <p class="admin-modal-text">Cette action est définitive. Voulez-vous continuer ?</p>
                 <div class="admin-form-actions">
                     <button type="button" class="admin-primary-button admin-seance-button--danger" data-action="admin-programmation#confirmDelete">Oui, supprimer</button>
                     <button type="button" class="admin-ghost-button" data-action="admin-programmation#closeDeleteModal">Annuler</button>
