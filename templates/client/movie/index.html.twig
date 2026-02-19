@@ -4,56 +4,60 @@
 
 {% block body %}
 
+{# {{ dump(film) }} #}
 <div class="">
-    <div class="flex flex-row items-start gap-6 h-133 pt-24">
-        <div class="container-photo-affiche">
-            {% if film.Image %}
-                <img src="{{ asset('images/' ~ film.Image) }}" alt="Affiche de {{ film.Nom }}" class="img-movie object-cover object-center w-200 h-133 absolute left-0 top-0">
-                <div class="w-200 h-133 absolute left-0 top-0">
-                    <div class="overlay-movie"></div>
-                </div>
-            {% else %}
-                <div class="w-200 h-133 bg-gray-700 flex items-center justify-center">
-                    <span class="text-gray-500">No Image</span>
-                </div>
-            {% endif %}
+
+    <div class="lg:flex gap-6 xl:gap-12 py-3 relative">
+        <div class="max-w-[16rem] w-full mx-auto hidden lg:block">
+            <div class="aspect-[2/3] relative rounded-md transition overflow-hidden cursor-pointer ">
+                <img src="{{ asset(film.Image) }}" alt="Affiche de {{ film.Nom }}" class="img-movie object-cover object-center absolute">
+            </div>
+            <a href="#" class="inline-flex whitespace-nowrap gap-x-3 items-center justify-center px-6 py-3.5 text-sm rounded-base font-[450] disabled:opacity-50 disabled:pointer-events-none transition border bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:border-gray-800 dark:text-gray-300 dark:hover:text-white dark:focus:ring-offset-gray-800 w-full mt-4" type="button">
+                Réserver votre place
+            </a>
         </div>
-        <div class="w-4/10 ml-auto">
-            <div class="flex flex-col gap-11">
-                {% if film.Categorie|length > 0 %}
-                    <div class="flex flex-row flex-wrap gap-2 mt-3">
-                        {% for categorie in film.Categorie %}
-                            <span class="px-3 py-1 text-xs font-semibold border-2 rounded-full {{ categorie.Nom }}">
-                                {{ categorie.Nom }}
-                            </span>
-                        {% endfor %}
-                    </div>
+        <div class="flex-1">
+            <h1 class="text-3xl tracking-tighter font-semibold text-gray-100 line-clamp-1 hidden lg:block">{{ film.Nom }}</h1>
+            <div class="hidden lg:flex items-center text-gray-400 dark:text-gray-400 text-xs mt-3 space-x-4 mb-6">
+                <p class="text-sm text-gray-400">{{ filmDuration }}</p>
+                {% if film.LimiteAge %}
+                    <p class="text-sm text-gray-400">{{ film.LimiteAge }}+</p>
                 {% endif %}
-                <div class="flex flex-col gap-1">
-                    <h1 class="text-5xl font-title w-full">{{ film.Nom }}</h1>
-                    <div class="flex flex-row items-center gap-4">
-                        <p class="text-sm">{{ filmDuration }}</p>
-                        <span class="w-[5px] h-[6px] rounded-2xl bg-white"></span>
-                        <p class="text-sm">{{ film.Realisateur }}</p>
-                        {% if film.LimiteAge %}
-                            <span class="w-[5px] h-[6px] rounded-2xl bg-white"></span>
-                            <p class="text-sm">{{ film.LimiteAge }}+</p>
-                        {% endif %}
+            </div>
+            <div id="description-container">
+                <p class="text-sm" id="description-text">
+                    <span id="description-static">{{ film.Description[:300] }}</span><span id="description-extra" class="hidden transition-all duration-300 ease-in-out">{{ film.Description[300:] }}</span>
+                </p>
+                {% if film.Description|length > 300 %}
+                    <button id="toggle-description" class=" text-[10px] mb-4">
+                        Lire plus +
+                    </button>
+                {% endif %}
+            </div>
+            <div class="my-6 space-y-2 text-sm tracking-tighter">
+                {# To-do #}
+                {# <div class="grid sm:flex gap-x-3">
+                    <div class="min-w-[150px] max-w-[200px] text-gray-400">
+                        Genre
                     </div>
-                </div>
-                <div class=""> 
-                    <div id="description-container">
-                        <p class="text-sm" id="description-text">
-                            <span id="description-static">{{ film.Description[:300] }}</span><span id="description-extra" class="hidden transition-all duration-300 ease-in-out">{{ film.Description[300:] }}</span>
-                        </p>
-                        {% if film.Description|length > 300 %}
-                            <button id="toggle-description" class=" text-[10px] mb-4">
-                                Lire plus +
-                            </button>
-                        {% endif %}
+                    <div class="flex flex-row flex-wrap gap-2">
+                            {% for categorie in film.Categorie %}
+                                <span class="font-medium text-gray-800 dark:text-gray-300 not-last-child-after inline-block mr-1 after:content-[','] last:mr-0 last:after:hidden">
+                                    {{ categorie.Nom }}
+                                </span>
+                            {% endfor %}
+                    </div>
+                </div> #}
+                <div class="grid sm:flex gap-x-3">
+                    <div class="min-w-[150px] max-w-[200px] text-gray-400">
+                        Réalisateur
+                    </div>
+                    <div class="font-medium text-gray-800 dark:text-gray-300">
+                        {{ film.Realisateur }}
                     </div>
                 </div>
             </div>
+            
         </div>
     </div>
 </div>
